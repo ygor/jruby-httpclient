@@ -14,12 +14,16 @@ module HTTP
       execute(HTTP::Post.new(url, params)).body
     end
 
-    def delete(url)
-      execute(HTTP::Delete.new(url)).body
+    def delete(url, params = {})
+      execute(HTTP::Delete.new(url, params)).body
     end
 
-    def put(url)
-      execute(HTTP::Put.new(url)).body
+    def put(url, params = {})
+      execute(HTTP::Put.new(url, params)).body
+    end
+
+    def head(url, params = {})
+      execute(HTTP::Head.new(url, params)).body
     end
 
     def execute(req)

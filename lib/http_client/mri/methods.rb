@@ -47,8 +47,8 @@ module HTTP
       [host, port, path, query]
     end
 
-    def create_uri(query = '')
-      "#{path}?#{query}" + ("&#{to_query_string(@params)}" unless @params.empty?)
+    def create_uri(path, query = '')
+      "#{path}?#{query}#{'&' unless @params.empty?}#{to_query_string(@params)}"
     end
 
     def to_query_string(params_as_hash)

@@ -25,12 +25,12 @@ module HTTP
       read_response(Post.new(params, options))
     end
 
-    def delete(path)
-      read_response(Delete.new(path))
+    def delete(path, options = {})
+      read_response(Delete.new(path, options))
     end
 
-    def put(path)
-      read_response(Put.new(path))
+    def put(path, options = {})
+      read_response(Put.new(path, options))
     end
 
     def read_response(request)

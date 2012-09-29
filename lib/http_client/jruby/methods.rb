@@ -1,4 +1,4 @@
-require 'cgi'
+require 'rack'
 
 module HTTP
   class Request
@@ -6,7 +6,7 @@ module HTTP
 
     def initialize(uri, params = {})
       @scheme, @host, @port, @path, query = parse_uri(uri)
-      @query_params = CGI.parse(query || "")
+      @query_params = ::Rack::Utils.parse_query(query || "")
       @params = params
 
       @encoding = "UTF-8"
