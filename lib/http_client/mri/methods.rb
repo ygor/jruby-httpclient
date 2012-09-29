@@ -46,60 +46,52 @@ module HTTP
 
       [host, port, path, query]
     end
+
+    def create_uri(query = '')
+      "#{path}?#{query}" + ("&#{to_query_string(@params)}" unless @params.empty?)
+    end
+
+    def to_query_string(params_as_hash)
+      params_as_hash.map { |name, value| "#{URI.encode(name.to_s)}=#{URI.encode(value.to_s)}" }.join("&")
+    end
   end
 
   class Get < Request
     def create_request
       host, port, path, query = parse_uri
-      get = Net::HTTP::Get.new("#{path}?#{query || to_query_string(@params)}")
+      get = Net::HTTP::Get.new(create_uri(path, query))
       [host, port, get]
-    end
-
-    def to_query_string(params_as_hash)
-      params_as_hash.map { |name, value| "#{URI.encode(name.to_s)}=#{URI.encode(value.to_s)}" }.join("&")
     end
   end
   
   class Head < Request
     def create_request
       host, port, path, query = parse_uri
-      head = Net::HTTP::Head.new("#{path}?#{query || to_query_string(@params)}")
+      head = Net::HTTP::Head.new(create_uri(path, query))
       [host, port, head]
-    end
-
-    def to_query_string(params_as_hash)
-      params_as_hash.map { |name, value| "#{URI.encode(name.to_s)}=#{URI.encode(value.to_s)}" }.join("&")
     end
   end
   
   class Options < Request
     def create_request
       host, port, path, query = parse_uri
-      options = Net::HTTP::Options.new("#{path}?#{query || to_query_string(@params)}")
+      options = Net::HTTP::Options.new(create_uri(path, query))
       [host, port, options]
-    end
-
-    def to_query_string(params_as_hash)
-      params_as_hash.map { |name, value| "#{URI.encode(name.to_s)}=#{URI.encode(value.to_s)}" }.join("&")
     end
   end
 
   class Patch < Request
     def create_request
       host, port, path, query = parse_uri
-      patch = Net::HTTP::Patch.new("#{path}?#{query || to_query_string(@params)}")
+      patch = Net::HTTP::Patch.new(create_uri(path, query))
       [host, port, patch]
-    end
-
-    def to_query_string(params_as_hash)
-      params_as_hash.map { |name, value| "#{URI.encode(name.to_s)}=#{URI.encode(value.to_s)}" }.join("&")
     end
   end
 
   class Post < Request
     def create_request
       host, port, path, query = parse_uri
-      post = Net::HTTP::Post.new(path)
+      post = Net::HTTP::Post.new(path + ("?#{query}" unless query == ''))
       post.set_form_data(@params)
       [host, port, post]
     end
@@ -108,7 +100,8 @@ module HTTP
   class Put < Request
     def create_request
       host, port, path, query = parse_uri
-      put = Net::HTTP::Put.new(path)
+      put = Net::HTTP::Put.new(path + ("?#{query}" unless query == ''))
+      put.set_form_data(@params)      
       [host, port, put]
     end
   end
@@ -116,7 +109,7 @@ module HTTP
   class Delete < Request
     def create_request
       host, port, path, query = parse_uri
-      delete = Net::HTTP::Delete.new(path)
+      delete = Net::HTTP::Delete.new(create_uri(path, query))
       [host, port, delete]
     end
   end

@@ -6,8 +6,8 @@ module HTTP
 
     def initialize(uri, params = {})
       @scheme, @host, @port, @path, query = parse_uri(uri)
-      combined_params = CGI.parse(query || "").merge(params)
-      @query_params = combined_params.collect { |key, value| BasicNameValuePair.new(key.to_s, value.to_s) }
+      @query_params = CGI.parse(query || "")
+      @params = params
 
       @encoding = "UTF-8"
       @headers = {}
@@ -40,7 +40,13 @@ module HTTP
     end
 
     private
+
+    def collect_params(params)
+      params.collect { |key, value| BasicNameValuePair.new(key.to_s, value.to_s) }
+    end
+
     def create_uri(query_string = nil)
+      query_string ||= URLEncodedUtils.format(collect_params(@query_params.merge @params), encoding)
       URIUtils.create_uri(@scheme, @host, @port, @path, query_string, nil)
     end
 
@@ -54,30 +60,28 @@ module HTTP
 
   class Post < Request
     def create_native_request
-      post = HttpPost.new(create_uri)
-      post.entity = UrlEncodedFormEntity.new(@query_params, encoding)
+      query_string = URLEncodedUtils.format(collect_params(@query_params), encoding)
+      post = HttpPost.new(create_uri(query_string))
+      post.entity = UrlEncodedFormEntity.new(collect_params(@params), encoding)
       post
     end
   end
 
   class Get < Request
     def create_native_request
-      query_string = URLEncodedUtils.format(@query_params, encoding)
-      HttpGet.new(create_uri(query_string))
+      HttpGet.new(create_uri)
     end
   end
 
   class Head < Request
     def create_native_request
-      query_string = URLEncodedUtils.format(@query_params, encoding)
-      HttpHead.new(create_uri(query_string))
+      HttpHead.new(create_uri)
     end
   end
 
   class Options < Request
     def create_native_request
-      query_string = URLEncodedUtils.format(@query_params, encoding)
-      HttpOptions.new(create_uri(query_string))
+      HttpOptions.new(create_uri)
     end
   end
 
@@ -89,7 +93,10 @@ module HTTP
 
   class Put < Request
     def create_native_request
-      HttpPut.new(create_uri)
+      query_string = URLEncodedUtils.format(collect_params(@query_params), encoding)
+      put = HttpPut.new(create_uri(query_string))
+      put.entity = UrlEncodedFormEntity.new(collect_params(@params), encoding)
+      put
     end
   end
 
