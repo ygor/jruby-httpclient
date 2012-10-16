@@ -4,7 +4,7 @@ class RedirectTest < Test::Unit::TestCase
   def test_get_redirect
     result = @client.get("/redirect", :content => "foo")
 
-    assert_equal("foo", result)
+    assert_equal("foo", result.body)
   end
 
   def setup

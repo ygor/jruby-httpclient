@@ -2,10 +2,10 @@ require 'helper'
 
 class CookieTest < Test::Unit::TestCase
   def test_cookies_can_be_remembered
-    @client.get("/set_cookie", :cookie => "nom nom nom")
-    result = @client.get("/echo_cookie")
+    @client.get("/set_cookie", :cookie => "nom nom nom").body
+    response = @client.get("/echo_cookie")
 
-    assert_equal("nom nom nom", result)
+    assert_equal("nom nom nom", response.body)
   end
 
   def test_cookie_can_be_retrieved_from_response

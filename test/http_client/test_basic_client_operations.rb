@@ -2,63 +2,63 @@ require 'helper'
 
 class TestBasicClientOperations < Test::Unit::TestCase
   def test_simple_get
-    result = @client.get("/echo", :content => "hello")
+    response = @client.get("/echo", :content => "hello")
 
-    assert_equal("hello", result)
+    assert_equal("hello", response.body)
   end
 
   def test_simple_post
-    result = @client.post("/echo", :content => "world")
+    response = @client.post("/echo", :content => "world")
 
-    assert_equal("world", result)
+    assert_equal("world", response.body)
   end
 
   def test_simple_delete
-    result = @client.delete("/echo")
+    response = @client.delete("/echo")
 
-    assert_equal("delete", result)
+    assert_equal("delete", response.body)
   end
 
   def test_simple_put
-    result = @client.put("/echo")
+    response = @client.put("/echo")
 
-    assert_equal("put", result)
+    assert_equal("put", response.body)
   end
 
   def test_can_get_full_url
-    result = @client.get("http://localhost:8080/echo", :content => "hello")
+    response = @client.get("http://localhost:8080/echo", :content => "hello")
 
-    assert_equal("hello", result)
+    assert_equal("hello", response.body)
   end
 
   def test_can_post_full_url
-    result = @client.post("http://localhost:8080/echo", :content => "hello")
+    response = @client.post("http://localhost:8080/echo", :content => "hello")
 
-    assert_equal("hello", result)
+    assert_equal("hello", response.body)
   end
 
   def test_can_delete_full_url
-    result = @client.delete("http://localhost:8080/echo")
+    response = @client.delete("http://localhost:8080/echo")
 
-    assert_equal("delete", result)
+    assert_equal("delete", response.body)
   end
 
   def test_can_put_full_url
-    result = @client.put("http://localhost:8080/echo")
+    response = @client.put("http://localhost:8080/echo")
 
-    assert_equal("put", result)
+    assert_equal("put", response.body)
   end
 
   def test_get_can_take_parameters_in_url
-    result = @client.get("http://localhost:8080/echo?content=bar")
+    response = @client.get("http://localhost:8080/echo?content=bar")
 
-    assert_equal("bar", result)
+    assert_equal("bar", response.body)
   end
 
   def test_get_url_parameters_take_precedence_over_optional_parameters
-    result = @client.get("http://localhost:8080/echo?content=bar", :content => "zed")
+    response = @client.get("http://localhost:8080/echo?content=bar", :content => "zed")
 
-    assert_equal("bar", result)
+    assert_equal("bar", response.body)
   end
 
   def test_timeout

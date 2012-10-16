@@ -7,23 +7,23 @@ module HTTP
     end
 
     def get(url, params = {})
-      execute(HTTP::Get.new(url, params)).body
+      execute HTTP::Get.new(url, params)
     end
 
     def post(url, params = {})
-      execute(HTTP::Post.new(url, params)).body
+      execute HTTP::Post.new(url, params)
     end
 
     def delete(url, params = {})
-      execute(HTTP::Delete.new(url, params)).body
+      execute HTTP::Delete.new(url, params)
     end
 
     def put(url, params = {})
-      execute(HTTP::Put.new(url, params)).body
+      execute HTTP::Put.new(url, params)
     end
 
     def head(url, params = {})
-      execute(HTTP::Head.new(url, params)).body
+      execute HTTP::Head.new(url, params)
     end
 
     def execute(req)

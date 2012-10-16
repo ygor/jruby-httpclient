@@ -10,31 +10,27 @@ module HTTP
     end
 
     def get(params, options = {})
-      read_response(Get.new(params, options))
+      execute Get.new(params, options)
     end
     
     def head(params, options = {})
-      read_response(Head.new(params, options))
+      execute Head.new(params, options)
     end
     
     def options(params, options = {})
-      read_response(Options.new(params, options))
+      execute Options.new(params, options)
     end
 
     def post(params, options = {})
-      read_response(Post.new(params, options))
+      execute Post.new(params, options)
     end
 
     def delete(path, options = {})
-      read_response(Delete.new(path, options))
+      execute Delete.new(path, options)
     end
 
     def put(path, options = {})
-      read_response(Put.new(path, options))
-    end
-
-    def read_response(request)
-      execute(request).body
+      execute Put.new(path, options)
     end
 
     def execute(request)
